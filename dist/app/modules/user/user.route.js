@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const auth_1 = __importDefault(require("../../middlwares/auth"));
+const validateRequest_1 = __importDefault(require("../../middlwares/validateRequest"));
+const user_constant_1 = require("./user.constant");
+const user_controller_1 = require("./user.controller");
+const user_validation_1 = require("./user.validation");
+const router = express_1.default.Router();
+router.post('/', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN), (0, validateRequest_1.default)(user_validation_1.UserValidation.createUserValidationSchema), user_controller_1.UserControllers.createUser);
+router.get('/me', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.CATALOG_MANAGER, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CUSTOMER), user_controller_1.UserControllers.getMyProfile);
+router.patch('/me', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.CATALOG_MANAGER, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CUSTOMER), (0, validateRequest_1.default)(user_validation_1.UserValidation.updateProfileValidationSchema), user_controller_1.UserControllers.updateMyProfile);
+router.post('/me/addresses', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.CATALOG_MANAGER, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CUSTOMER), user_controller_1.UserControllers.addSavedAddress);
+router.delete('/me/addresses/:addressId', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.CATALOG_MANAGER, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CUSTOMER), user_controller_1.UserControllers.deleteSavedAddress);
+router.patch('/me/preferences', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.CATALOG_MANAGER, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CUSTOMER), user_controller_1.UserControllers.updatePreferences);
+router.get('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.CATALOG_MANAGER, user_constant_1.USER_ROLE.SALES_STAFF), user_controller_1.UserControllers.getSingleUser);
+router.patch('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN), (0, validateRequest_1.default)(user_validation_1.UserValidation.updateUserValidationSchema), user_controller_1.UserControllers.updateUser);
+router.delete('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN), user_controller_1.UserControllers.deleteUser);
+router.get('/', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.CATALOG_MANAGER, user_constant_1.USER_ROLE.SALES_STAFF), user_controller_1.UserControllers.getAllUsers);
+exports.UserRoutes = router;

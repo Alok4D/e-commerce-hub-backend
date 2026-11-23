@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CustomerRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const auth_1 = __importDefault(require("../../middlwares/auth"));
+const validateRequest_1 = __importDefault(require("../../middlwares/validateRequest"));
+const user_constant_1 = require("../user/user.constant");
+const customer_controller_1 = require("./customer.controller");
+const customer_validation_1 = require("./customer.validation");
+const router = express_1.default.Router();
+router.get('/dashboard/follow-ups', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CATALOG_MANAGER), customer_controller_1.CustomerControllers.getPendingFollowUps);
+router.post('/', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF), (0, validateRequest_1.default)(customer_validation_1.CustomerValidation.createCustomerValidationSchema), customer_controller_1.CustomerControllers.createCustomer);
+router.get('/', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CATALOG_MANAGER), customer_controller_1.CustomerControllers.getAllCustomers);
+router.get('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF, user_constant_1.USER_ROLE.CATALOG_MANAGER), customer_controller_1.CustomerControllers.getSingleCustomer);
+router.patch('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF), (0, validateRequest_1.default)(customer_validation_1.CustomerValidation.updateCustomerValidationSchema), customer_controller_1.CustomerControllers.updateCustomer);
+router.post('/:id/notes', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF), (0, validateRequest_1.default)(customer_validation_1.CustomerValidation.addNoteValidationSchema), customer_controller_1.CustomerControllers.addNote);
+router.post('/:id/follow-ups', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF), (0, validateRequest_1.default)(customer_validation_1.CustomerValidation.addFollowUpValidationSchema), customer_controller_1.CustomerControllers.addFollowUp);
+router.patch('/:id/follow-ups/:followUpId', (0, auth_1.default)(user_constant_1.USER_ROLE.SUPER_ADMIN, user_constant_1.USER_ROLE.SALES_STAFF), customer_controller_1.CustomerControllers.toggleFollowUp);
+exports.CustomerRoutes = router;

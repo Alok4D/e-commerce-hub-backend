@@ -1,62 +1,57 @@
 import { Router } from 'express';
-import { AdminRoutes } from '../modules/Admin/admin.route';
-import { CourseRoutes } from '../modules/Course/course.route';
-import { FacultyRoutes } from '../modules/Faculty/faculty.route';
-import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.route';
-import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.route';
-import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSemester.route';
-import { StudentRoutes } from '../modules/student/student.route';
-import { UserRoutes } from '../modules/user/user.route';
-import { semesterRegistrationRoutes } from '../modules/SemesterRegistration/semesterRegistration.route';
-import { offeredCourseRoutes } from '../modules/OfferedCourse/offeredCourse.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
+import { UserRoutes } from '../modules/user/user.route';
+import { CategoryRoutes } from '../modules/category/category.route';
+import { ProductRoutes } from '../modules/product/product.route';
+import { OrderRoutes } from '../modules/order/order.route';
+import { CustomerRoutes } from '../modules/customer/customer.route';
+import { SettingsRoutes } from '../modules/settings/settings.route';
+import { CouponRoutes } from '../modules/coupon/coupon.route';
+import { AnalyticsRoutes } from '../modules/analytics/analytics.route';
+import { MarketingRoutes } from '../modules/marketing/marketing.route';
 
 const router = Router();
 
 const moduleRoutes = [
   {
+    path: '/auth',
+    route: AuthRoutes,
+  },
+  {
     path: '/users',
     route: UserRoutes,
   },
   {
-    path: '/students',
-    route: StudentRoutes,
+    path: '/categories',
+    route: CategoryRoutes,
   },
   {
-    path: '/faculties',
-    route: FacultyRoutes,
+    path: '/products',
+    route: ProductRoutes,
   },
   {
-    path: '/admins',
-    route: AdminRoutes,
+    path: '/orders',
+    route: OrderRoutes,
   },
   {
-    path: '/academic-semesters',
-    route: AcademicSemesterRoutes,
+    path: '/customers',
+    route: CustomerRoutes,
   },
   {
-    path: '/academic-faculties',
-    route: AcademicFacultyRoutes,
+    path: '/coupons',
+    route: CouponRoutes,
   },
   {
-    path: '/academic-departments',
-    route: AcademicDepartmentRoutes,
+    path: '/settings',
+    route: SettingsRoutes,
   },
   {
-    path: '/courses',
-    route: CourseRoutes,
+    path: '/analytics',
+    route: AnalyticsRoutes,
   },
   {
-    path: '/semester-registrations',
-    route: semesterRegistrationRoutes,
-  },
-  {
-    path: '/offered-course',
-    route: offeredCourseRoutes,
-  },
-  {
-    path: '/auth',
-    route: AuthRoutes,
+    path: '/marketing',
+    route: MarketingRoutes,
   },
 ];
 

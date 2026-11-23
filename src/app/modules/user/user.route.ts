@@ -1,33 +1,98 @@
 import express from 'express';
-import { createAdminValidationSchema } from '../Admin/admin.validation';
-import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
-import { createStudentValidationSchema } from './../student/student.validation';
-import { UserControllers } from './user.controller';
-import validateRequest from '../../middlwares/validateRequest';
 import auth from '../../middlwares/auth';
+import validateRequest from '../../middlwares/validateRequest';
 import { USER_ROLE } from './user.constant';
+import { UserControllers } from './user.controller';
+import { UserValidation } from './user.validation';
 
 const router = express.Router();
 
 router.post(
-  '/create-student',
-  auth(USER_ROLE.admin),
-  validateRequest(createStudentValidationSchema),
-  UserControllers.createStudent,
+  '/',
+  auth(USER_ROLE.SUPER_ADMIN),
+  validateRequest(UserValidation.createUserValidationSchema),
+  UserControllers.createUser,
+);
+
+router.get(
+  '/me',
+  auth(
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.CATALOG_MANAGER,
+    USER_ROLE.SALES_STAFF,
+    USER_ROLE.CUSTOMER,
+  ),
+  UserControllers.getMyProfile,
+);
+
+router.patch(
+  '/me',
+  auth(
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.CATALOG_MANAGER,
+    USER_ROLE.SALES_STAFF,
+    USER_ROLE.CUSTOMER,
+  ),
+  validateRequest(UserValidation.updateProfileValidationSchema),
+  UserControllers.updateMyProfile,
 );
 
 router.post(
-  '/create-faculty',
-  // auth(USER_ROLE.admin),
-  validateRequest(createFacultyValidationSchema),
-  UserControllers.createFaculty,
+  '/me/addresses',
+  auth(
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.CATALOG_MANAGER,
+    USER_ROLE.SALES_STAFF,
+    USER_ROLE.CUSTOMER,
+  ),
+  UserControllers.addSavedAddress,
 );
 
-router.post(
-  '/create-admin',
-  // auth(USER_ROLE.admin),
-  validateRequest(createAdminValidationSchema),
-  UserControllers.createAdmin,
+router.delete(
+  '/me/addresses/:addressId',
+  auth(
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.CATALOG_MANAGER,
+    USER_ROLE.SALES_STAFF,
+    USER_ROLE.CUSTOMER,
+  ),
+  UserControllers.deleteSavedAddress,
+);
+
+router.patch(
+  '/me/preferences',
+  auth(
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.CATALOG_MANAGER,
+    USER_ROLE.SALES_STAFF,
+    USER_ROLE.CUSTOMER,
+  ),
+  UserControllers.updatePreferences,
+);
+
+router.get(
+  '/:id',
+  auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.CATALOG_MANAGER, USER_ROLE.SALES_STAFF),
+  UserControllers.getSingleUser,
+);
+
+router.patch(
+  '/:id',
+  auth(USER_ROLE.SUPER_ADMIN),
+  validateRequest(UserValidation.updateUserValidationSchema),
+  UserControllers.updateUser,
+);
+
+router.delete(
+  '/:id',
+  auth(USER_ROLE.SUPER_ADMIN),
+  UserControllers.deleteUser,
+);
+
+router.get(
+  '/',
+  auth(USER_ROLE.SUPER_ADMIN, USER_ROLE.CATALOG_MANAGER, USER_ROLE.SALES_STAFF),
+  UserControllers.getAllUsers,
 );
 
 export const UserRoutes = router;

@@ -1,0 +1,81 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthControllers = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const config_1 = __importDefault(require("../../config"));
+const catchAsync_1 = __importDefault(require("../../utlis/catchAsync"));
+const sendResponse_1 = __importDefault(require("../../utlis/sendResponse"));
+const auth_service_1 = require("./auth.service");
+const registerUser = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await auth_service_1.AuthServices.registerUser(req.body);
+    const { refreshToken, accessToken, user, demoOtp } = result;
+    res.cookie('refreshToken', refreshToken, {
+        secure: config_1.default.NODE_ENV === 'production',
+        httpOnly: true,
+    });
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.CREATED,
+        success: true,
+        message: 'User registered successfully! Please verify your phone number.',
+        data: {
+            accessToken,
+            user,
+            demoOtp,
+        },
+    });
+});
+const loginUser = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await auth_service_1.AuthServices.loginUser(req.body);
+    const { refreshToken, accessToken, user } = result;
+    res.cookie('refreshToken', refreshToken, {
+        secure: config_1.default.NODE_ENV === 'production',
+        httpOnly: true,
+    });
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User logged in successfully!',
+        data: {
+            accessToken,
+            user,
+        },
+    });
+});
+const verifyPhoneOtp = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await auth_service_1.AuthServices.verifyPhoneOtp(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Phone number verified successfully!',
+        data: result,
+    });
+});
+const changePassword = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await auth_service_1.AuthServices.changePassword(req.user, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Password updated successfully!',
+        data: result,
+    });
+});
+const refreshToken = (0, catchAsync_1.default)(async (req, res) => {
+    const token = req.cookies.refreshToken;
+    const result = await auth_service_1.AuthServices.refreshToken(token);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Access token retrieved successfully!',
+        data: result,
+    });
+});
+exports.AuthControllers = {
+    registerUser,
+    loginUser,
+    verifyPhoneOtp,
+    changePassword,
+    refreshToken,
+};
